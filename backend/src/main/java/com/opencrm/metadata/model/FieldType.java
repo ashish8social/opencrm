@@ -1,0 +1,10 @@
+package com.opencrm.metadata.model;
+
+public enum FieldType {
+    TEXT, NUMBER, DECIMAL, DATE, DATETIME,
+    BOOLEAN, PICKLIST, MULTI_PICKLIST,
+    EMAIL, PHONE, URL, CURRENCY,
+    TEXTAREA, RICH_TEXT,
+    FORMULA, AUTO_NUMBER,
+    LOOKUP, MASTER_DETAIL
+}

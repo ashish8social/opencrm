@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: opencrm
+      POSTGRES_USER: opencrm
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-opencrm_dev}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opencrm"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/opencrm
+      SPRING_DATASOURCE_USERNAME: opencrm
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-opencrm_dev}
+      SPRING_PROFILES_ACTIVE: dev
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production-min-32-chars!!}
+    ports:
+      - "8081:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+    environment:
+      VITE_API_URL: http://localhost:8081
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

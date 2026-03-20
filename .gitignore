@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+frontend/dist/
+backend/target/
+
+# Docker volumes
+pgdata/
+
+# Environment files (contain secrets)
+.env
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven wrapper jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Vite
+frontend/.vite/
